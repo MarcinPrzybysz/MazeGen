@@ -1,9 +1,15 @@
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 import java.util.*;
 
 public class MazeGen {
     int width, length;
-    boolean[] neighbours = new boolean[4]; //top, right, bottom, left
+    int currentX = 0;
+    int currentY = 0;
+    int next;
+    public boolean[] neighbours = new boolean[4]; //top, right, bottom, left
     Stack<Cell> path = new Stack();
+
 
 
     public MazeGen(int width, int length) {
@@ -11,80 +17,135 @@ public class MazeGen {
         this.length=length;
 
         Cell[][] maze = new Cell[width][length];
-        boolean[] neighbours = new boolean[4]; //top, right, bottom, left
 
 
 
-
-        for(int i=0; i<width; i++){
-            for(int j=0; j<length; j++){
-                maze[i][j] = new Cell(i,j);
+        for(int x=0; x<width; x++){
+            for(int y=0; y<length; y++){
+                maze[x][y] = new Cell(x,y);
             }
         }
-
-        maze[0][9].setVisited();
-        maze[2][2].setVisited();
 
         printCells(maze);
 
+        unvisitedNeighbours(maze, currentX, currentY);
 
 
-        for(int i=1; i<2; i++){
-            for(int j=0; j<maze[0].length; j++){
-                unvisitedNeighbours(maze,i,j);
-                System.out.print(i+ ", "+ j+ ": " );
-                for(int x=0; x<neighbours.length; x++){
-                   // System.out.print(neighbours[x]+ " ");
-                }
-                System.out.println();
-            }
+
+        System.out.println("");
+        for(int i=0; i<neighbours.length; i++){
+            System.out.print(neighbours[i]+ " ");
         }
+        System.out.println("");
+
+        System.out.println("ma sąsiadów?: "+hasNeighbour(neighbours));
+
+        maze[currentX][currentY].setVisited();
+
+      while(hasNeighbour(neighbours)) {
+          unvisitedNeighbours(maze, currentX, currentY);
+          maze[currentX][currentY].setVisited();
+          System.out.println("hasNeighbours ?????   "+ hasNeighbour(neighbours));
+          next = randomNeighbour();
+          if (next == 0) {
+              currentX = currentX - 1;
+          }
+          if (next == 1) {
+              currentY = currentY + 1;
+          }
+          if (next == 2) {
+              currentX = currentX + 1;
+          }
+          if (next == 3) {
+              currentY = currentY - 1;
+          }
+          System.out.println("");
+          printCells(maze);
+         // System.out.println("hasNeighbours "+ hasNeighbour(neighbours));
+
+      }
 
 
-
+        System.out.println("KONIEC");
+        printCells(maze);
 
 
     }
 
 
-    private void unvisitedNeighbours(Cell[][] maze, int i, int j) {
-        System.out.print("sąsiedzi :"+i+", "+j+": ");
+    private void unvisitedNeighbours(Cell[][] maze, int x, int y) {
+        System.out.println("Current Cell :"+x+", "+y+": ");
         neighbours[0]=false;
         neighbours[1]=false;
         neighbours[2]=false;
         neighbours[3]=false;
 
-            if(  !( (i-1<0) || !maze[i-1][j].getVisited() ) ){
+            if(  !( (x-1<0) || maze[x-1][y].getVisited() ) ){
                 neighbours[0]=true;
                 System.out.print("top, ");
             }
-            if(  !( (j+1>maze.length-1) || !maze[i][j+1].getVisited() ) ){
+            if(  !( (y+1>maze.length-1) || maze[x][y+1].getVisited() ) ){
                 neighbours[1]=true;
                 System.out.print("right, ");
             }
-            if(  !( (i+1>maze[0].length-1) || !maze[i+1][j].getVisited() ) ){
+            if(  !( (x+1>maze[0].length-1) || maze[x+1][y].getVisited() ) ){
                 neighbours[2]=true;
                 System.out.print("bot, ");
             }
-            if(  !( (j-1<0) || !maze[i][j-1].getVisited() ) ){
+            if(  !( (y-1<0) || maze[x][y-1].getVisited() ) ){
                 neighbours[3]=true;
                 System.out.print("left, ");
             }
-        System.out.println();
-        for(int x=0; x<neighbours.length; x++){
-            System.out.print(neighbours[x]+ " ");
+
+        System.out.print("sąsiedzi: ");
+        for(int i=0; i<neighbours.length; i++){
+            System.out.print(neighbours[i]+ " ");
         }
+        System.out.println();
+
    }
 
+
+
+    private int randomNeighbour(){
+       int random;
+        do{
+            random=(int)((Math.random()*100)%4);
+        }while(neighbours[random]==false);
+        return random;
+   }
 
     private void printCells(Cell[][] maze){
         for(int i=0; i<maze.length; i++){
             for(int j=0; j<maze[0].length; j++){
-                System.out.print(maze[i][j].getVisited() + "\t");
+
+                if(maze[i][j].getVisited()){
+                    System.out.print("1 ");
+                }else
+                    System.out.print("0 ");
             }
             System.out.println();
         }
     }
+
+
+    public boolean hasNeighbour(boolean[] neighbours){
+        int sum=0;
+        for(int i=0; i<neighbours.length; i++){
+            if(neighbours[i]) {
+                System.out.println("TUTAJ");
+                sum = sum + 1;
+            }
+        }
+        System.out.println("suma: " +sum);
+        if(sum==0){
+            System.out.println("nie ma sąsiadów");
+            return false;
+        }else {
+            return true;
+        }
+    }
+
 
 
 }
