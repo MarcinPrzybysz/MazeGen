@@ -9,7 +9,7 @@ public class Cell {
     }
 
     public void setVisited(){
-        visited=!visited;
+        visited=true;
     }
 
     public boolean getVisited(){

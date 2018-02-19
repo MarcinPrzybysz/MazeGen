@@ -41,9 +41,10 @@ public class MazeGen {
         System.out.println("ma sąsiadów?: "+hasNeighbour(neighbours));
 
         maze[currentX][currentY].setVisited();
+        unvisitedNeighbours(maze, currentX, currentY);
 
       while(hasNeighbour(neighbours)) {
-          unvisitedNeighbours(maze, currentX, currentY);
+
           maze[currentX][currentY].setVisited();
           System.out.println("hasNeighbours ?????   "+ hasNeighbour(neighbours));
           next = randomNeighbour();
@@ -61,6 +62,7 @@ public class MazeGen {
           }
           System.out.println("");
           printCells(maze);
+          unvisitedNeighbours(maze, currentX, currentY);
          // System.out.println("hasNeighbours "+ hasNeighbour(neighbours));
 
       }
