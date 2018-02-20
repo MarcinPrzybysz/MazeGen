@@ -9,7 +9,8 @@ public class MazeGen {
     int next;
     public boolean[] neighbours = new boolean[4]; //top, right, bottom, left
     public boolean[][] mazeBorders;
-    Stack<Cell> path = new Stack();
+    public Cords c = new Cords(0,0);
+    Stack<Cords> path = new Stack();
 
 
 
@@ -18,7 +19,10 @@ public class MazeGen {
         this.length=length;
 
         Cell[][] maze = new Cell[width][length];
-        mazeBorders = new boolean[2*width+2][2*length+2];
+        mazeBorders = new boolean[2*width+1][2*length+1];
+
+        path.push(c);
+
 
         for(int x=0; x<mazeBorders.length; x=x+2){
             for(int y=0; y<mazeBorders[0].length; y++){
@@ -42,8 +46,6 @@ public class MazeGen {
             }
             System.out.println("");
         }
-
-
 
 
 
@@ -74,39 +76,61 @@ public class MazeGen {
         maze[currentX][currentY].setVisited();
         unvisitedNeighbours(maze, currentX, currentY);
 
-      while(hasNeighbour(neighbours)) {
+        while(!path.isEmpty()) {
+            unvisitedNeighbours(maze, currentX, currentY);
+            while (hasNeighbour(neighbours)) {
 
-          maze[currentX][currentY].setVisited();
-   //       System.out.println("hasNeighbours ?????   "+ hasNeighbour(neighbours));
-          next = randomNeighbour();
-          if (next == 0) {
-              mazeBorders[2*currentX][currentY*2+1]=false;
-              currentX = currentX - 1;
-          }
-          if (next == 1) {
-              mazeBorders[currentX*2+1][currentY*2+2]=false;
-              currentY = currentY + 1;
-          }
-          if (next == 2) {
-              mazeBorders[currentX*2+2][currentY*2+1]=false;
-              currentX = currentX + 1;
-          }
-          if (next == 3) {
-              mazeBorders[currentX*2+1][currentY*2]=false;
-              currentY = currentY - 1;
-          }
+                c = new Cords(currentX, currentY);
 
-          printCells(maze);
-          printBorders();
-          System.out.println("");
-          unvisitedNeighbours(maze, currentX, currentY);
-         // System.out.println("hasNeighbours "+ hasNeighbour(neighbours));
+                //             System.out.println("hasNeighbours ?????   "+ hasNeighbour(neighbours));
+                next = randomNeighbour();
+                if (next == 0) {
+                    mazeBorders[2 * currentX][currentY * 2 + 1] = false;
+                    currentX = currentX - 1;
+                    c.setX(c.getX() - 1);
+                }
+                if (next == 1) {
+                    mazeBorders[currentX * 2 + 1][currentY * 2 + 2] = false;
+                    currentY = currentY + 1;
+                    c.setY(c.getY() + 1);
+                }
+                if (next == 2) {
+                    mazeBorders[currentX * 2 + 2][currentY * 2 + 1] = false;
+                    currentX = currentX + 1;
+                    c.setX(c.getX() + 1);
+                }
+                if (next == 3) {
+                    mazeBorders[currentX * 2 + 1][currentY * 2] = false;
+                    currentY = currentY - 1;
+                    c.setY(c.getY() - 1);
+                }
+                maze[currentX][currentY].setVisited();
+                path.push(c);
+                printCells(maze);
+                printBorders();
+                System.out.println("");
+                unvisitedNeighbours(maze, currentX, currentY);
+                // System.out.println("hasNeighbours "+ hasNeighbour(neighbours));
+            }
+            currentX=path.peek().getX();
+            currentY=path.peek().getY();
 
-      }
+            //System.out.println(path.peek().getX()+ "\t" + path.peek().getY()  );
+            path.pop();
+
+        }
+
+
+
 
 
         System.out.println("KONIEC");
         printCells(maze);
+
+        while (!path.isEmpty()){
+            System.out.println(path.peek().getX()+ "\t" + path.peek().getY()  );
+            path.pop();
+        }
 
 
 
