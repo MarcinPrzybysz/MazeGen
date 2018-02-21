@@ -3,7 +3,7 @@ import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import java.util.*;
 
 public class MazeGen {
-    int width, length;
+    int width, height;
     int currentX = 0;
     int currentY = 0;
     int next;
@@ -16,7 +16,13 @@ public class MazeGen {
 
     public MazeGen(int width, int length) {
         this.width=width;
-        this.length=length;
+        this.height=length;
+
+
+        ImgGen img = new ImgGen(width, height);
+
+
+
 
         Cell[][] maze = new Cell[width][length];
         mazeBorders = new boolean[2*width+1][2*length+1];
@@ -106,9 +112,9 @@ public class MazeGen {
                 }
                 maze[currentX][currentY].setVisited();
                 path.push(c);
-                printCells(maze);
-                printBorders();
-                System.out.println("");
+                //printCells(maze);
+                //printBorders();
+                //System.out.println("");
                 unvisitedNeighbours(maze, currentX, currentY);
                 // System.out.println("hasNeighbours "+ hasNeighbour(neighbours));
             }
@@ -133,7 +139,8 @@ public class MazeGen {
         }
 
 
-
+        img.editImg(mazeBorders);
+        img.saveImg();
 
 
 
