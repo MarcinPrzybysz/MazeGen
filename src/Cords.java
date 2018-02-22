@@ -8,12 +8,10 @@ public class Cords {
 
     public void setX(int x){
         this.x=x;
-        System.out.println("X set to" + x);
     }
 
     public void setY(int y){
         this.y=y;
-        System.out.println("Y set to" + y);
     }
 
     public int getX(){

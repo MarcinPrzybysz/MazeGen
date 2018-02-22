@@ -1,20 +1,15 @@
-public class Cell {
-    public int x,y;
-    boolean visited;
+class Cell {
+    private boolean visited;
 
-    public Cell(int x, int y){
-        this.x=x;
-        this.y=y;
+    Cell(){
         visited = false;
     }
 
-    public void setVisited(){
+    void setVisited(){
         visited=true;
     }
 
-    public boolean getVisited(){
+    boolean getVisited(){
         return visited;
     }
-
-
 }
